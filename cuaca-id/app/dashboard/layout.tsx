@@ -40,9 +40,9 @@ async function getData(userId: string) {
     return redirect("/onboarding");
   }
 
-  if (!data.grantId) {
+  /* if (!data.grantId) {
     return redirect("/onboarding/grant-id");
-  }
+  } */
 
   return data;
 }
@@ -84,7 +84,7 @@ export default async function DashboardLayout({
             <Sheet>
               <SheetTrigger asChild>
                 <Button
-                  className="md:hidden shrink-0 bg-primary"
+                  className="md:hidden shrink-0 bg-secondary"
                   size="icon"
                   variant="outline"
                 >

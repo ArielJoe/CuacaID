@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { OnboardingAction } from "../actions";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -29,6 +29,7 @@ export default function OnboardingRoute() {
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
   });
+
   return (
     <div className="min-h-screen w-screen flex items-center justify-center">
       <Card>
@@ -53,9 +54,9 @@ export default function OnboardingRoute() {
             <div className="grid gap-y-2">
               <Label>Username</Label>
               <div className="flex rounded-md">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-muted bg-muted text-sm text-muted-foreground">
+                {/* <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-muted bg-muted text-sm text-muted-foreground">
                   CuacaID.com/
-                </span>
+                </span> */}
                 <Input
                   placeholder="John2005"
                   className="rounded-l-none"

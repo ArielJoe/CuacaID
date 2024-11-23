@@ -1,3 +1,4 @@
+/*
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,4 +31,15 @@ export default function OnboardingRouteTwo() {
       </Card>
     </div>
   );
+}
+*/
+"use client";
+
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
+
+export default function OnboardingRouteTwo() {
+  useEffect(() => {
+    redirect("/dashboard");
+  }, []);
 }
