@@ -17,13 +17,13 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 w-full h-full", className)} // Ensures full width and height
+      className={cn("p-3 w-full h-fit", className)}
       classNames={{
         months:
           "flex flex-col sm:flex-row w-full h-full space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4 w-full h-full flex flex-col justify-center",
         caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-base font-medium sm:text-lg", // Larger text for better visibility
+        caption_label: "text-base font-medium sm:text-lg",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
@@ -31,12 +31,12 @@ function Calendar({
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
-        table: "w-full h-full border-collapse space-y-1", // Table spans full height
+        table: "w-full h-full border-collapse space-y-1",
         head_row: "flex w-full justify-between",
         head_cell:
-          "text-muted-foreground rounded-md w-full font-normal text-xs sm:text-sm", // Resize text for day labels
+          "text-muted-foreground rounded-md w-full font-normal text-xs sm:text-sm",
         row: "flex h-[75px] w-full mt-2",
-        cell: "h-12 w-full text-center text-xs sm:text-sm p-0 relative flex items-center justify-center", // Resizes day cells
+        cell: "h-12 w-full text-center text-xs sm:text-sm p-0 relative flex items-center justify-center",
         day: cn(
           buttonVariants({ variant: "ghost" }),
           "h-12 w-12 p-0 text-base sm:text-lg md:text-3xl font-normal aria-selected:opacity-100"
@@ -53,7 +53,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-5 w-5" />, // Slightly larger icons
+        IconLeft: ({ ...props }) => <ChevronLeft className="h-5 w-5" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-5 w-5" />,
       }}
       {...props}

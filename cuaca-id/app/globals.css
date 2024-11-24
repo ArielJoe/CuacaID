@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-calendars/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
+
+.fc-header-toolbar {
+  display: inline-block;
+  padding: 4px 4px;
+
+  @apply space-x-8;
+}
+
+.fc-day {
+  @apply m-8;
+}
+
+.fc-scrollgrid-sync-table {
+  @apply w-full;
+}
+
+.fc-view {
+  @apply w-full h-full lg:h-3/4 xl:h-2/3;
+}
+
+.fc-h-event {
+  @apply bg-primary;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  @apply bg-primary/20;
+}
+
+.fc .fc-button {
+  @apply bg-primary hover:bg-primary/50;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  @apply bg-primary;
+}
+
+.fc .fc-button-primary:disabled {
+  @apply bg-primary/30;
+}
+
+.fc-v-event {
+  @apply bg-primary;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

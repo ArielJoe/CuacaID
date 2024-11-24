@@ -1,17 +1,26 @@
-"use client";
+import prisma from "@/app/lib/db";
+import { requireUser } from "@/app/lib/hooks";
+import { CalendarComponent } from "@/app/components/Calendar";
 
-import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+export default async function MyCalendar() {
+  const session = await requireUser(); // Ensure the user is authenticated
+  const schedules = await prisma.calendar.findMany({
+    where: {
+      userId: session.user?.id,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      fromTime: true,
+      tillTime: true,
+      day: true,
+    },
+  });
 
-export default function CalendarPage() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  
   return (
-    <Calendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-      className="border h-fit"
-    />
+    <div>
+      <CalendarComponent schedules={schedules} />
+    </div>
   );
 }
