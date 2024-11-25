@@ -16,8 +16,8 @@ export function CalendarComponent({ schedules }: { schedules: Schedule[] }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
-    <div className="flex flex-col sm:flex-row w-full">
-      <div className="mt-5 mr-4 w-full sm:w-[40%]">
+    <div className="flex flex-col gap-3 sm:flex-row w-full">
+      <div className="w-full sm:w-[40%]">
         {schedules.length > 0 ? (
           schedules.map((schedule) => (
             <div

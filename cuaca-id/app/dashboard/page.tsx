@@ -87,7 +87,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-3 w-full">
-        <div className="flex flex-col gap-2 bg-secondary p-6 w-full md:w-[60%] rounded-md">
+        <div className="flex flex-col justify-center gap-2 bg-secondary p-6 w-full md:w-[60%] rounded-md">
           <CurrentWeather
             currentWeatherData={currentWeatherData}
             // clientData={clientData}
