@@ -2,13 +2,35 @@ import { useEffect, useState } from "react";
 import { kelvinToCelsius } from "../lib/convert";
 import Image from "next/image";
 
+type WeatherData = {
+  name: string;
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+    feels_like: number;
+  };
+  weather: {
+    description: string;
+    icon: string;
+  }[];
+  wind: {
+    speed: number;
+  };
+  visibility: number;
+};
+
+interface CurrentWeatherProps {
+  currentWeatherData: WeatherData;
+}
+
 export default function CurrentWeather({
   currentWeatherData,
 }: // clientData,
-any) {
-  const [temp, setTemp] = useState(currentWeatherData.main.temp);
+CurrentWeatherProps) {
+  // const [temp, setTemp] = useState(currentWeatherData.main.temp);
   const [time, setTime] = useState("");
-  const [tempUnit, setTempUnit] = useState("C");
+  // const [tempUnit, setTempUnit] = useState("C");
 
   useEffect(() => {
     updateTime();

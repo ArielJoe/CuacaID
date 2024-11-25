@@ -1,7 +1,25 @@
 import Image from "next/image";
 import { kelvinToCelsius } from "../lib/convert";
 
-export default function DailyWeather({ dailyWeatherData }: any) {
+type WeatherItem = {
+  dt_txt: string;
+  main: {
+    temp: number;
+  };
+  weather: {
+    icon: string;
+  }[];
+};
+
+type DailyWeatherData = {
+  list: WeatherItem[];
+};
+
+interface DailyWeatherProps {
+  dailyWeatherData: DailyWeatherData;
+}
+
+export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
   function formatDate(d: string | number | Date): string {
     const date = new Date(d);
     if (isNaN(date.getTime())) {
@@ -18,7 +36,7 @@ export default function DailyWeather({ dailyWeatherData }: any) {
       <p>DAILY FORECAST</p>
       <div className="mt-3 flex gap-3 justify-center">
         {dailyWeatherData.list.map(
-          (item: any, index: number) =>
+          (item, index) =>
             item.dt_txt.split(" ")[1] === "00:00:00" && (
               <div
                 key={index}

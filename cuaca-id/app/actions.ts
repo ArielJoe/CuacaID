@@ -6,7 +6,7 @@ import { requireUser } from "./lib/hooks";
 import { onboardingSchemaValidation, settingsSchema } from "./lib/zodSchemas";
 import { redirect } from "next/navigation";
 
-export async function OnboardingAction(prevState: any, formData: FormData) {
+export async function OnboardingAction(prevState: unknown, formData: FormData) {
   const session = await requireUser();
 
   const submission = await parseWithZod(formData, {
@@ -27,7 +27,7 @@ export async function OnboardingAction(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const data = await prisma.user.update({
+  /* const data = */ await prisma.user.update({
     where: {
       id: session.user?.id,
     },
@@ -40,7 +40,7 @@ export async function OnboardingAction(prevState: any, formData: FormData) {
   return redirect("/dashboard");
 }
 
-export async function SettingsAction(prevState: any, formData: FormData) {
+export async function SettingsAction(prevState: unknown, formData: FormData) {
   const session = await requireUser();
 
   const submission = parseWithZod(formData, {
@@ -51,7 +51,7 @@ export async function SettingsAction(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const user = await prisma.user.update({
+  /* const user = */ await prisma.user.update({
     where: {
       id: session.user?.id,
     },

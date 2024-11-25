@@ -8,6 +8,6 @@ export default nextConfig;
 
 module.exports = {
   images: {
-    domains: ["openweathermap.org"],
+    domains: ["openweathermap.org", "lh3.googleusercontent.com"],
   },
 };

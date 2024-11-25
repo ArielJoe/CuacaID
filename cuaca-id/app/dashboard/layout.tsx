@@ -22,10 +22,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "../lib/auth";
 import { requireUser } from "../lib/hooks";
-import prisma from "../lib/db";
-import { redirect } from "next/navigation";
+// import prisma from "../lib/db";
+// import { redirect } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
 
+/*
 async function getData(userId: string) {
   const data = await prisma.user.findUnique({
     where: {
@@ -40,12 +41,13 @@ async function getData(userId: string) {
     return redirect("/onboarding");
   }
 
-  /* if (!data.grantId) {
+  if (!data.grantId) {
     return redirect("/onboarding/grant-id");
-  } */
+  }
 
   return data;
 }
+*/
 
 export default async function DashboardLayout({
   children,
@@ -53,7 +55,7 @@ export default async function DashboardLayout({
   children: ReactNode;
 }) {
   const session = await requireUser();
-  const data = await getData(session?.user?.id as string);
+  // const data = await getData(session?.user?.id as string);
 
   return (
     <>

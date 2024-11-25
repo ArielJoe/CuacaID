@@ -1,4 +1,5 @@
-export let timelineResourceData: Object[] = [
+/*
+export const timelineResourceData: Object[] = [
   {
     Id: 61,
     Subject: "Decoding",
@@ -81,3 +82,4 @@ export let timelineResourceData: Object[] = [
     TaskId: 1,
   },
 ];
+*/
