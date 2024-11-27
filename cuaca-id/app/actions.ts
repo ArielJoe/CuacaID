@@ -4,7 +4,7 @@ import { parseWithZod } from "@conform-to/zod";
 import prisma from "./lib/db";
 import { requireUser } from "./lib/hooks";
 import { onboardingSchemaValidation, settingsSchema } from "./lib/zodSchemas";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function OnboardingAction(prevState: unknown, formData: FormData) {
   const session = await requireUser();
@@ -64,6 +64,25 @@ export async function SettingsAction(prevState: unknown, formData: FormData) {
   return redirect("/dashboard");
 }
 
+export async function getData(id: string) {
+  const data = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      name: true,
+      email: true,
+      image: true,
+    },
+  });
+
+  if (!data) {
+    return notFound();
+  }
+
+  return data;
+}
+
 export async function getSchedule(userId: string) {
   const schedules = await prisma.calendar.findMany({
     where: {
@@ -71,10 +90,11 @@ export async function getSchedule(userId: string) {
     },
     select: {
       id: true,
-      title: true,
       description: true,
-      time: true,
+      title: true,
       day: true,
+      startTime: true,
+      endTime: true,
     },
   });
   return schedules;
@@ -84,7 +104,8 @@ export async function addSchedule(
   title: string,
   description: string,
   day: string,
-  time: string
+  startTime: string,
+  endTime: string
 ) {
   const session = await requireUser();
   const userId = session.user?.id;
@@ -94,7 +115,8 @@ export async function addSchedule(
         title,
         description,
         day,
-        time,
+        startTime,
+        endTime,
         userId,
       },
     });

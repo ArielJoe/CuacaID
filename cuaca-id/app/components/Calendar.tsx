@@ -17,10 +17,11 @@ import {
 
 interface Schedule {
   id: string;
-  day: string;
-  time: string;
   title: string;
   description: string;
+  day: string;
+  startTime: string;
+  endTime: string;
 }
 
 export function CalendarComponent() {
@@ -74,8 +75,9 @@ export function CalendarComponent() {
               <div className="grid gap-2">
                 <p>{schedule.title}</p>
                 <p>{schedule.description}</p>
+                <p>{schedule.day}</p>
                 <p>
-                  {schedule.day}, {schedule.time}
+                  {schedule.startTime} - {schedule.endTime}
                 </p>
               </div>
 
@@ -94,8 +96,9 @@ export function CalendarComponent() {
                     <div className="grid gap-2 border border-secondary rounded-md p-3">
                       <p>{schedule.title}</p>
                       <p>{schedule.description}</p>
+                      <p>{schedule.day}</p>
                       <p>
-                        {schedule.day}, {schedule.time}
+                        {schedule.startTime} - {schedule.endTime}
                       </p>
                     </div>
                     <DialogFooter>

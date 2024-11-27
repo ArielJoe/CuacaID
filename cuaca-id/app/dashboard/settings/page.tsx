@@ -1,35 +1,111 @@
-import { SettingsForm } from "@/app/components/SettingsForm";
-import prisma from "@/app/lib/db";
-import { requireUser } from "@/app/lib/hooks";
-import { notFound } from "next/navigation";
+"use client";
 
-async function getData(id: string) {
-  const data = await prisma.user.findUnique({
-    where: {
-      id: id,
-    },
-    select: {
-      name: true,
-      email: true,
-      image: true,
-    },
-  });
+import SettingsForm from "@/app/components/SettingsForm";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
 
-  if (!data) {
-    return notFound();
-  }
+export default function SettingsRoute() {
+  const [tempUnit, setTempUnit] = useState(
+    localStorage.getItem("tempUnit") || "C"
+  );
+  const [windUnit, setWindUnit] = useState(
+    localStorage.getItem("windUnit") || "kmh"
+  );
 
-  return data;
-}
+  useEffect(() => {
+    if (!localStorage.getItem("tempUnit")) {
+      localStorage.setItem("tempUnit", "C");
+    }
+    if (!localStorage.getItem("windUnit")) {
+      localStorage.setItem("windUnit", "kmh");
+    }
+  }, []);
 
-export default async function SettingsRoute() {
-  const session = await requireUser();
-  const data = await getData(session.user?.id as string);
   return (
-    <SettingsForm
-      email={data.email}
-      fullName={data.name as string}
-      profileImage={data.image as string}
-    />
+    <div className="flex flex-col sm:flex-row gap-4 w-full">
+      <div className="w-full sm:w-[60%]">
+        <SettingsForm />
+      </div>
+      <div className="border border-secondary rounded-lg p-6 w-full sm:w-[40%]">
+        <h2 className="text-xl font-bold mb-3">Units</h2>
+        <div className="grid gap-3">
+          <div className="flex justify-between items-center bg-secondary/50 rounded-md p-3">
+            <div>Temperature</div>
+            <div className="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-primary text-secondary hover:bg-secondary"
+                  >
+                    {tempUnit}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.setItem("tempUnit", "C");
+                      setTempUnit("C");
+                    }}
+                  >
+                    C
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.setItem("tempUnit", "F");
+                      setTempUnit("F");
+                    }}
+                  >
+                    F
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center bg-secondary/50 rounded-md p-3">
+            <div>Wind Speed</div>
+            <div className="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-primary text-secondary hover:bg-secondary"
+                  >
+                    {windUnit?.replace("kmh", "km/h")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.setItem("windUnit", "kmh");
+                      setWindUnit("kmh");
+                    }}
+                  >
+                    km/h
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.setItem("windUnit", "mph");
+                      setWindUnit("mph");
+                    }}
+                  >
+                    mph
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

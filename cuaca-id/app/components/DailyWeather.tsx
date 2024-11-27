@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { kelvinToCelsius } from "../lib/convert";
+import { celciusToFahrenheit } from "../lib/convert";
 
 type WeatherItem = {
   dt_txt: string;
@@ -39,14 +39,14 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
 
   return (
     <div className="mt-3">
-      <p>DAILY FORECAST</p>
+      <p className="text-lg">Daily Forecast</p>
       <div className="mt-3 flex gap-3 justify-center">
         {dailyWeatherData.list.map(
           (item, index) =>
             item.dt_txt.split(" ")[1] === "00:00:00" && (
               <div
                 key={index}
-                className="grid gap-2  bg-secondary/80 rounded-md p-3 w-full"
+                className="grid gap-2  bg-secondary rounded-md p-3 w-full"
               >
                 <p className="text-xs sm:text-base">
                   {formatDate(item.dt_txt.split(" ")[0])}
@@ -56,10 +56,11 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
                   alt="cloud image"
                   width={50}
                   height={50}
-                  className="bg-primary/80 rounded-full"
                 />
                 <p className="text-xs sm:text-base">
-                  {kelvinToCelsius(item.main.temp)}°
+                  {localStorage.getItem("tempUnit") === "C"
+                    ? item.main.temp + "°C"
+                    : celciusToFahrenheit(item.main.temp) + "°F"}
                 </p>
               </div>
             )

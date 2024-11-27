@@ -36,15 +36,11 @@ type HourlyWeatherData = {
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
-  const [city, setCity] = useState("Bandung");
+  const [city, setCity] = useState("");
   const [currentWeatherData, setCurrentWeatherData] =
     useState<CurrentWeatherData | null>(null);
   const [hourlyWeatherData, setHourlyWeatherData] =
     useState<HourlyWeatherData | null>(null);
-  /* const [clientData, setClientData] = useState<Record<string, unknown> | null>(
-    null
-  ); */
-  const API_KEY = process.env.NEXT_PUBLIC_WEATHER_KEY;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,27 +56,36 @@ export default function DashboardPage() {
   }, []);
 
   const fetchWeatherAndClient = async () => {
-    const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
-    const hourlyWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`;
-    // const ipRegistry = `https://api.ipregistry.co/?key=ira_zMf2obt3eWEg710UASqpuOBPak2XPE3FxGbW`;
+    const ipRegistry = `https://api.ipregistry.co/?key=ira_zMf2obt3eWEg710UASqpuOBPak2XPE3FxGbW`;
+    const API_KEY = process.env.NEXT_PUBLIC_WEATHER_KEY;
 
     try {
-      const currentWeather = await axios.get<CurrentWeatherData>(
-        currentWeatherUrl
-      );
-      const hourlyWeather = await axios.get<HourlyWeatherData>(
-        hourlyWeatherUrl
-      );
-      // const client = await axios.get(ipRegistry);
+      let detectedCity = "";
+      if (city === "") {
+        const ipRegistryResponse = await axios.get(ipRegistry);
+        detectedCity = ipRegistryResponse.data.location.city;
+
+        setCity(detectedCity);
+      } else {
+        detectedCity = city;
+      }
+
+      const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${detectedCity}&appid=${API_KEY}&units=metric`;
+      const hourlyWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${detectedCity}&appid=${API_KEY}&units=metric`;
+
+      const [currentWeather, hourlyWeather] = await Promise.all([
+        axios.get<CurrentWeatherData>(currentWeatherUrl),
+        axios.get<HourlyWeatherData>(hourlyWeatherUrl),
+      ]);
+
       setCurrentWeatherData(currentWeather.data);
       setHourlyWeatherData(hourlyWeather.data);
-      // setClientData(client.data);
     } catch (error) {
       toast({
         variant: "destructive",
-        description: "Data not found",
+        description: "Data not found. Please try again.",
       });
-      console.log(error);
+      console.log("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -128,7 +133,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-3 w-full">
-        <div className="flex flex-col justify-center gap-2 bg-secondary/40 p-6 w-full md:w-[60%] rounded-md">
+        <div className="flex flex-col justify-center gap-2 bg-secondary/50 p-6 w-full md:w-[60%] rounded-md">
           <CurrentWeather currentWeatherData={currentWeatherData} />
           <HourlyWeather hourlyWeatherData={hourlyWeatherData} />
           <DailyWeather dailyWeatherData={hourlyWeatherData} />

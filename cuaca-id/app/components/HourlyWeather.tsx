@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { kelvinToCelsius } from "../lib/convert";
+import { celciusToFahrenheit } from "../lib/convert";
 
 type WeatherItem = {
   dt: number;
@@ -32,8 +32,8 @@ export default function HourlyWeather({
 
   return (
     <div>
-      <p>HOURLY FORECAST</p>
-      <div className="mt-3 p-3 bg-secondary/80 flex justify-around rounded-md">
+      <p className="text-lg">Hourly Forecast</p>
+      <div className="mt-3 p-3 bg-secondary flex justify-around rounded-md">
         {hourlyWeatherData.list.slice(0, 5).map((item, index) => (
           <div key={index} className="flex flex-col gap-2 items-center">
             <p className="text-xs sm:text-base">
@@ -44,10 +44,11 @@ export default function HourlyWeather({
               alt="cloud image"
               width={50}
               height={50}
-              className="bg-primary/80 rounded-full"
             />
             <p className="text-xs sm:text-base">
-              {kelvinToCelsius(item.main.temp)}°
+              {localStorage.getItem("tempUnit") === "C"
+                ? item.main.temp + "°C"
+                : celciusToFahrenheit(item.main.temp) + "°F"}
             </p>
           </div>
         ))}

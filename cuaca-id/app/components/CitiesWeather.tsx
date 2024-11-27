@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { kelvinToCelsius } from "../lib/convert";
+import { kelvinToCelsius, kelvinToFahrenheit } from "../lib/convert";
 import { Loader2 } from "lucide-react";
 
 const cities = [
@@ -103,22 +103,26 @@ export default function CitiesWeather() {
   return (
     <div className="flex flex-col gap-3">
       {citiesWeather.map((cityWeather, index) => (
-        <div
-          key={index}
-          className="grid gap-8 bg-secondary rounded-md p-4"
-        >
+        <div key={index} className="grid gap-8  bg-secondary rounded-md p-4">
           <div className="flex justify-between">
             <h2 className="font-bold text-2xl">{cityWeather.name}</h2>
             <p className="text-3xl font-bold">
-              {kelvinToCelsius(cityWeather.main.temp)}°
+              {localStorage.getItem("tempUnit") === "C"
+                ? kelvinToCelsius(cityWeather.main.temp) + "°C"
+                : kelvinToFahrenheit(cityWeather.main.temp) + "°F"}
             </p>
           </div>
           <div className="flex justify-between">
             <p>{cityWeather.weather[0].description}</p>
             <p>
-              L : {kelvinToCelsius(cityWeather.main.temp_min)}
+              L :{" "}
+              {localStorage.getItem("tempUnit") === "C"
+                ? kelvinToCelsius(cityWeather.main.temp_min) + "°C"
+                : kelvinToFahrenheit(cityWeather.main.temp_min) + "°F"}
               °&nbsp;&nbsp;&nbsp;H :{" "}
-              {kelvinToCelsius(cityWeather.main.temp_max)}°
+              {localStorage.getItem("tempUnit") === "C"
+                ? kelvinToCelsius(cityWeather.main.temp_max) + "°C"
+                : kelvinToFahrenheit(cityWeather.main.temp_max) + "°F"}
             </p>
           </div>
         </div>

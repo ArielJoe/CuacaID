@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
 import { Calendar } from "./DatePicker";
@@ -15,15 +15,20 @@ import { cn } from "@/lib/utils";
 import { addSchedule } from "../actions";
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, useRef, useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 export function DateTimePicker() {
-  const minuteRef = useRef<HTMLInputElement>(null);
-  const hourRef = useRef<HTMLInputElement>(null);
-  const secondRef = useRef<HTMLInputElement>(null);
+  const startHourRef = useRef<HTMLInputElement>(null);
+  const startMinuteRef = useRef<HTMLInputElement>(null);
+  const startSecondRef = useRef<HTMLInputElement>(null);
+  const endHourRef = useRef<HTMLInputElement>(null);
+  const endMinuteRef = useRef<HTMLInputElement>(null);
+  const endSecondRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState<Date>();
-  const [time, setTime] = useState<Date>();
+  const [startTime, setStartTime] = useState<Date>();
+  const [endTime, setEndTime] = useState<Date>();
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -34,15 +39,89 @@ export function DateTimePicker() {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    const dateValue = new Date(date!).toDateString();
-    const timeValue = new Date(time!);
-    const hours = timeValue.getHours().toString().padStart(2, "0");
-    const minutes = timeValue.getMinutes().toString().padStart(2, "0");
-    const seconds = timeValue.getSeconds().toString().padStart(2, "0");
-    const formattedTime = `${hours}:${minutes}:${seconds}`;
+    if (!title.trim()) {
+      event.preventDefault();
+      toast({ description: "Title is required!" });
+      return;
+    }
 
-    console.log(event);
-    await addSchedule(title, description, dateValue, formattedTime);
+    if (!description.trim()) {
+      event.preventDefault();
+      toast({ description: "Description is required!" });
+      return;
+    }
+
+    if (!date) {
+      event.preventDefault();
+      toast({ description: "Date is required!" });
+      return;
+    }
+
+    if (!startTime) {
+      event.preventDefault();
+      toast({ description: "Start time is required!" });
+      return;
+    }
+
+    if (!endTime) {
+      event.preventDefault();
+      toast({ description: "End time is required!" });
+      return;
+    }
+
+    if (endTime <= startTime) {
+      event.preventDefault();
+      toast({ description: "End time must be after the start time!" });
+      return;
+    }
+
+    const currentDateTime = new Date();
+    const combinedStartDateTime = new Date(
+      new Date(date).toDateString() + " " + startTime.toTimeString()
+    );
+
+    if (combinedStartDateTime <= currentDateTime) {
+      event.preventDefault();
+      toast({
+        description:
+          "Date and start time must be after the current date and time!",
+      });
+      return;
+    }
+
+    try {
+      const dateValue = new Date(date).toDateString();
+      const startTimeValue = new Date(startTime);
+      const endTimeValue = new Date(endTime);
+
+      const formatTime = (time: Date) => {
+        const hours = time.getHours().toString().padStart(2, "0");
+        const minutes = time.getMinutes().toString().padStart(2, "0");
+        const seconds = time.getSeconds().toString().padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+      };
+
+      const formattedStartTime = formatTime(startTimeValue);
+      const formattedEndTime = formatTime(endTimeValue);
+
+      await addSchedule(
+        title,
+        description,
+        dateValue,
+        formattedStartTime,
+        formattedEndTime
+      );
+
+      toast({ description: "Schedule added successfully!" });
+
+      setTitle("");
+      setDescription("");
+      setDate(undefined);
+      setStartTime(undefined);
+      setEndTime(undefined);
+    } catch (error) {
+      console.log("Error adding schedule:", error);
+    }
   };
 
   return (
@@ -63,13 +142,7 @@ export function DateTimePicker() {
             )}
           >
             <CalendarIcon />
-            {date ? (
-              format(date!, "PPP") +
-              " " +
-              (time ? String(time).split(" ")[4] : "00:00:00")
-            ) : (
-              <span>Pick a date and time</span>
-            )}
+            {date ? format(date!, "PPP") : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-3 grid gap-2">
@@ -79,49 +152,69 @@ export function DateTimePicker() {
             onSelect={setDate}
             className="rounded-md border"
           />
-          <div className="flex justify-center items-end gap-2">
-            <div className="grid gap-1 text-center">
-              <Label htmlFor="hours" className="text-xs">
-                Hours
-              </Label>
-              <TimePickerInput
-                picker="hours"
-                date={time}
-                setDate={setTime}
-                ref={hourRef}
-                onRightFocus={() => minuteRef.current?.focus()}
-              />
+        </PopoverContent>
+        <div className="flex flex-col gap-2 border border-secondary rounded-md p-3">
+          <div className="sm:flex sm:justify-around">
+            <div>
+              <Label>Start Time</Label>
+              <div className="flex items-center gap-2">
+                <TimePickerInput
+                  picker="hours"
+                  date={startTime}
+                  setDate={setStartTime}
+                  ref={startHourRef}
+                  onRightFocus={() => startMinuteRef.current?.focus()}
+                />
+                :
+                <TimePickerInput
+                  picker="minutes"
+                  date={startTime}
+                  setDate={setStartTime}
+                  ref={startMinuteRef}
+                  onLeftFocus={() => startHourRef.current?.focus()}
+                  onRightFocus={() => startSecondRef.current?.focus()}
+                />
+                :
+                <TimePickerInput
+                  picker="seconds"
+                  date={startTime}
+                  setDate={setStartTime}
+                  ref={startSecondRef}
+                  onLeftFocus={() => endHourRef.current?.focus()}
+                />
+              </div>
             </div>
-            <div className="grid gap-1 text-center">
-              <Label htmlFor="minutes" className="text-xs">
-                Minutes
-              </Label>
-              <TimePickerInput
-                picker="minutes"
-                date={time}
-                setDate={setTime}
-                ref={minuteRef}
-                onLeftFocus={() => hourRef.current?.focus()}
-                onRightFocus={() => secondRef.current?.focus()}
-              />
-            </div>
-            <div className="grid gap-1 text-center">
-              <Label htmlFor="seconds" className="text-xs">
-                Seconds
-              </Label>
-              <TimePickerInput
-                picker="seconds"
-                date={time}
-                setDate={setTime}
-                ref={secondRef}
-                onLeftFocus={() => minuteRef.current?.focus()}
-              />
-            </div>
-            <div className="flex h-10 items-center">
-              <Clock className="ml-2 h-4 w-4" />
+            <div>
+              <Label>End Time</Label>
+              <div className="flex items-center gap-2">
+                <TimePickerInput
+                  picker="hours"
+                  date={endTime}
+                  setDate={setEndTime}
+                  ref={endHourRef}
+                  onRightFocus={() => endMinuteRef.current?.focus()}
+                />
+                :
+                <TimePickerInput
+                  picker="minutes"
+                  date={endTime}
+                  setDate={setEndTime}
+                  ref={endMinuteRef}
+                  onLeftFocus={() => endHourRef.current?.focus()}
+                  onRightFocus={() => endSecondRef.current?.focus()}
+                />
+                :
+                <TimePickerInput
+                  picker="seconds"
+                  date={endTime}
+                  setDate={setEndTime}
+                  ref={endSecondRef}
+                  onLeftFocus={() => endMinuteRef.current?.focus()}
+                />
+              </div>
             </div>
           </div>
-        </PopoverContent>
+        </div>
         <Button className="w-full" type="submit">
           Set
         </Button>

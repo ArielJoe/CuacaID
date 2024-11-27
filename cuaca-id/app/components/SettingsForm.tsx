@@ -11,26 +11,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "./SubmitButtons";
-import { SettingsAction } from "../actions";
+import { getData, SettingsAction } from "../actions";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { settingsSchema } from "../lib/zodSchemas";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { UploadDropzone } from "../lib/uploadthing";
 import { toast } from "sonner";
 import Image from "next/image";
+import { requireUser } from "../lib/hooks";
 
-interface iAppProps {
-  fullName: string;
+interface UserData {
+  name: string;
   email: string;
-  profileImage: string;
+  image?: string;
 }
 
-export function SettingsForm({ email, fullName, profileImage }: iAppProps) {
+export default function SettingsForm() {
+  const [data, setData] = useState<UserData | null>(null);
+  const [currentProfileImage, setCurrentProfileImage] = useState("");
   const [lastResult, action] = useActionState(SettingsAction, undefined);
-  const [currentProfileImage, setCurrentProfileImage] = useState(profileImage);
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
@@ -42,9 +44,32 @@ export function SettingsForm({ email, fullName, profileImage }: iAppProps) {
     shouldRevalidate: "onInput",
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const session = await requireUser();
+      const userData = await getData(session.user?.id as string);
+      setData(userData as UserData);
+      setCurrentProfileImage(userData.image as string);
+    };
+
+    fetchData().catch((error) => {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to load user data.");
+    });
+  }, []);
+
   const handleDeleteImage = () => {
     setCurrentProfileImage("");
   };
+
+  if (!data) {
+    return (
+      <div className="flex justify-center items-center">
+        <Loader2 className="size-4 mr-2 animate-spin" />
+        Fetching personal data...
+      </div>
+    );
+  }
 
   return (
     <Card>
@@ -59,7 +84,7 @@ export function SettingsForm({ email, fullName, profileImage }: iAppProps) {
             <Input
               name={fields.fullName.name}
               key={fields.fullName.key}
-              defaultValue={fullName}
+              defaultValue={data.name}
               placeholder="John Doe"
             />
             <p className="text-red-500 text-sm">{fields.fullName.errors}</p>
@@ -68,7 +93,7 @@ export function SettingsForm({ email, fullName, profileImage }: iAppProps) {
             <Label>Email</Label>
             <Input
               disabled
-              defaultValue={email}
+              defaultValue={data.email}
               placeholder="johndoe@gmail.com"
             />
           </div>
@@ -78,7 +103,7 @@ export function SettingsForm({ email, fullName, profileImage }: iAppProps) {
               type="hidden"
               name={fields.profileImage.name}
               key={fields.profileImage.key}
-              value={currentProfileImage}
+              value={currentProfileImage!}
             />
             {currentProfileImage ? (
               <div className="relative size-16">

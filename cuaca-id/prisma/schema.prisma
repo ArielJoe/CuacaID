@@ -17,12 +17,11 @@ model User {
   userName      String?    @unique
   grantId       String?
   grantEmail    String?
-  calendar      Calendar[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   accounts      Account[]
+  calendar      Calendar[]
   sessions      Session[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Account {
@@ -37,11 +36,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -50,10 +47,9 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -66,12 +62,13 @@ model VerificationToken {
 
 model Calendar {
   id          String  @id @default(uuid())
-  day         String
-  time        String
   title       String
   description String
-  User        User?   @relation(fields: [userId], references: [id])
+  day         String
+  startTime   String
+  endTime     String
   userId      String?
+  User        User?   @relation(fields: [userId], references: [id])
 }
 
 enum Day {
