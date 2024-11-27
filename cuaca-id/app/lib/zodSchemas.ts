@@ -51,3 +51,11 @@ export const settingsSchema = z.object({
   fullName: z.string().min(3).max(100),
   profileImage: z.string(),
 });
+
+export const schedulingSchema = z.object({
+  title: z.string().min(3).max(50),
+  description: z.string().min(3).max(100),
+  date: z.date().refine((date) => !isNaN(date.getTime()), {
+    message: "Date must be a valid date",
+  }),
+});

@@ -48,7 +48,7 @@ CurrentWeatherProps) {
 
   return (
     <div className="text-center grid gap-2 justify-center">
-      <p className="text-xl">
+      <p className="text-3xl font-bold">
         {currentWeatherData.name} {/* {clientData.location.region.name} */}
       </p>
       <div className="grid gap-1">

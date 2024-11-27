@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="grid gap-y-2">
+      <div className="grid">
         <div className="flex rounded-md">
           <span className="inline-flex items-center rounded-l-full px-3 border border-r-0 border-muted bg-muted text-sm text-muted-foreground">
             <button onClick={fetchWeatherAndClient}>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-3 w-full">
-        <div className="flex flex-col justify-center gap-2 bg-secondary p-6 w-full md:w-[60%] rounded-md">
+        <div className="flex flex-col justify-center gap-2 bg-secondary/40 p-6 w-full md:w-[60%] rounded-md">
           <CurrentWeather currentWeatherData={currentWeatherData} />
           <HourlyWeather hourlyWeatherData={hourlyWeatherData} />
           <DailyWeather dailyWeatherData={hourlyWeatherData} />

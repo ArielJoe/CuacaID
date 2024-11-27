@@ -20,7 +20,7 @@ interface DailyWeatherProps {
 }
 
 export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
-  function formatDate(d: string | number | Date): string {
+  function formatDate(d: string | number | Date) {
     const date = new Date(d);
     if (isNaN(date.getTime())) {
       throw new Error("Invalid date format");
@@ -28,7 +28,13 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
     const options: Intl.DateTimeFormatOptions = { weekday: "short" };
     const day = date.getDate();
     const weekday = new Intl.DateTimeFormat("en-US", options).format(date);
-    return `${weekday} ${day}`;
+    return (
+      <>
+        {weekday}
+        <br />
+        {day}
+      </>
+    );
   }
 
   return (
@@ -40,7 +46,7 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
             item.dt_txt.split(" ")[1] === "00:00:00" && (
               <div
                 key={index}
-                className="grid gap-2 bg-primary/10 rounded-md p-3 w-full"
+                className="grid gap-2  bg-secondary/80 rounded-md p-3 w-full"
               >
                 <p className="text-xs sm:text-base">
                   {formatDate(item.dt_txt.split(" ")[0])}
@@ -50,7 +56,7 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
                   alt="cloud image"
                   width={50}
                   height={50}
-                  className="bg-secondary/70 rounded-full"
+                  className="bg-primary/80 rounded-full"
                 />
                 <p className="text-xs sm:text-base">
                   {kelvinToCelsius(item.main.temp)}°

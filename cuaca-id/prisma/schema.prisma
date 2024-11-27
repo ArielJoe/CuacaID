@@ -66,9 +66,8 @@ model VerificationToken {
 
 model Calendar {
   id          String  @id @default(uuid())
-  day         Day
-  fromTime    String
-  tillTime    String
+  day         String
+  time        String
   title       String
   description String
   User        User?   @relation(fields: [userId], references: [id])
@@ -76,11 +75,11 @@ model Calendar {
 }
 
 enum Day {
-  Monday
-  Tuesday
-  Wednesday
-  Thursday
-  Friday
-  Saturday
-  Sunday
+  Mon
+  Tue
+  Wed
+  Thu
+  Fri
+  Sat
+  Sun
 }

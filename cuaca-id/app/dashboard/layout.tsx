@@ -72,7 +72,7 @@ export default async function DashboardLayout({
               </Link>
             </div>
             <div className="flex-1">
-              <nav className="grid items-start px-2 lg:px-4">
+              <nav className="grid px-2 lg:px-4">
                 <DashboardLinks />
               </nav>
             </div>
@@ -86,7 +86,7 @@ export default async function DashboardLayout({
             <Sheet>
               <SheetTrigger asChild>
                 <Button
-                  className="md:hidden shrink-0 bg-secondary"
+                  className="md:hidden shrink-0 bg-secondary hover:bg-primary hover:text-black"
                   size="icon"
                   variant="outline"
                 >

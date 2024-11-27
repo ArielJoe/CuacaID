@@ -103,7 +103,10 @@ export default function CitiesWeather() {
   return (
     <div className="flex flex-col gap-3">
       {citiesWeather.map((cityWeather, index) => (
-        <div key={index} className="grid gap-8 bg-primary/20 rounded-md p-4">
+        <div
+          key={index}
+          className="grid gap-8 bg-secondary rounded-md p-4"
+        >
           <div className="flex justify-between">
             <h2 className="font-bold text-2xl">{cityWeather.name}</h2>
             <p className="text-3xl font-bold">

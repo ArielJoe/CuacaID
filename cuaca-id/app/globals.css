@@ -56,6 +56,31 @@
   @apply bg-primary;
 }
 
+::selection {
+  background-color: #ffcc14;
+  color: white;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary;
+}
+
+/* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary;
+} */
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -63,3 +63,56 @@ export async function SettingsAction(prevState: unknown, formData: FormData) {
 
   return redirect("/dashboard");
 }
+
+export async function getSchedule(userId: string) {
+  const schedules = await prisma.calendar.findMany({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      time: true,
+      day: true,
+    },
+  });
+  return schedules;
+}
+
+export async function addSchedule(
+  title: string,
+  description: string,
+  day: string,
+  time: string
+) {
+  const session = await requireUser();
+  const userId = session.user?.id;
+  try {
+    const schedule = await prisma.calendar.create({
+      data: {
+        title,
+        description,
+        day,
+        time,
+        userId,
+      },
+    });
+    console.log("Schedule created:", schedule);
+  } catch (error) {
+    console.log("Error creating schedule:", error);
+  }
+}
+
+export async function deleteSchedule(id: string) {
+  try {
+    const schedule = await prisma.calendar.delete({
+      where: {
+        id: id,
+      },
+    });
+    console.log("Schedule deleted:", schedule);
+  } catch (error) {
+    console.log("Error deleting schedule:", error);
+  }
+}

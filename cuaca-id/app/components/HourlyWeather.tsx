@@ -33,7 +33,7 @@ export default function HourlyWeather({
   return (
     <div>
       <p>HOURLY FORECAST</p>
-      <div className="mt-3 p-3 bg-primary/10 flex justify-around rounded-md">
+      <div className="mt-3 p-3 bg-secondary/80 flex justify-around rounded-md">
         {hourlyWeatherData.list.slice(0, 5).map((item, index) => (
           <div key={index} className="flex flex-col gap-2 items-center">
             <p className="text-xs sm:text-base">
@@ -44,7 +44,7 @@ export default function HourlyWeather({
               alt="cloud image"
               width={50}
               height={50}
-              className="bg-secondary/70 rounded-full"
+              className="bg-primary/80 rounded-full"
             />
             <p className="text-xs sm:text-base">
               {kelvinToCelsius(item.main.temp)}°
