@@ -64,7 +64,6 @@ export default function DashboardPage() {
       if (city === "") {
         const ipRegistryResponse = await axios.get(ipRegistry);
         detectedCity = ipRegistryResponse.data.location.city;
-
         setCity(detectedCity);
       } else {
         detectedCity = city;
@@ -83,7 +82,7 @@ export default function DashboardPage() {
     } catch (error) {
       toast({
         variant: "destructive",
-        description: "Data not found. Please try again.",
+        description: "Data not found, please try again.",
       });
       console.log("Error fetching data:", error);
     } finally {

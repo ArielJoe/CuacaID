@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 
 interface Schedule {
   id: string;
@@ -61,6 +62,32 @@ export function CalendarComponent() {
   ) => {
     console.log(event);
     await deleteSchedule(id);
+  };
+
+  const handleDayClick = async (day: Date) => {
+    const detectedSchedules = schedules.filter((schedule) => {
+      return schedule.day === day.toDateString();
+    });
+
+    return detectedSchedules;
+  };
+
+  const onDayClick = async (day: Date) => {
+    const matchedSchedules = await handleDayClick(day);
+
+    if (matchedSchedules.length > 0) {
+      toast({
+        title: `Your schedule on ${day.toDateString()}`,
+        description: matchedSchedules
+          .map((schedule) => `${schedule.title} : ${schedule.description}`)
+          .join(", "),
+      });
+    } else {
+      toast({
+        title: `No schedules found on ${day.toDateString()}`,
+        description: "You have no events scheduled for this day.",
+      });
+    }
   };
 
   return (
@@ -124,6 +151,7 @@ export function CalendarComponent() {
         selected={date}
         onSelect={setDate}
         className="rounded-md border w-full sm:w-[60%]"
+        onDayClick={onDayClick}
       />
     </div>
   );

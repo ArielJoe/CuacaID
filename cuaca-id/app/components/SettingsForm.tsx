@@ -3,7 +3,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -75,7 +74,6 @@ export default function SettingsForm() {
     <Card>
       <CardHeader>
         <CardTitle>Settings</CardTitle>
-        <CardDescription>Manage your account settings</CardDescription>
       </CardHeader>
       <form id={form.id} onSubmit={form.onSubmit} action={action} noValidate>
         <CardContent className="flex flex-col gap-y-4">

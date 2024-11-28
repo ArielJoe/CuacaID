@@ -1,12 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { requireUser } from "@/app/lib/hooks";
+import { getSchedule } from "@/app/actions";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+
+interface Schedule {
+  id: string;
+  title: string;
+  description: string;
+  day: string;
+  startTime: string;
+  endTime: string;
+}
 
 function Calendar({
   className,
@@ -14,6 +26,52 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const [markedDays, setMarkedDays] = useState<Date[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSchedules();
+  }, []);
+
+  async function fetchSchedules() {
+    try {
+      const session = await requireUser();
+      const userId = session.user?.id;
+      const schedules: Schedule[] = await getSchedule(userId!);
+      const days = schedules.map((schedule) => new Date(schedule.day));
+
+      setMarkedDays(days);
+    } catch (error) {
+      console.log("Error fetching schedules:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center">
+          <Loader2 className="size-4 mr-2 animate-spin" />
+          Fetching calendar data...
+        </div>
+      );
+    }
+  }
+
+  // Modifier function to check if a date is in the markedDays array
+  const isMarkedDay = (date: Date) => {
+    return markedDays.some(
+      (markedDate) =>
+        markedDate.getDate() === date.getDate() &&
+        markedDate.getMonth() === date.getMonth() &&
+        markedDate.getFullYear() === date.getFullYear()
+    );
+  };
+
+  // Modifier function to check if a date is Sunday
+  const isSunday = (date: Date) => date.getDay() === 0;
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -51,6 +109,14 @@ function Calendar({
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         ...classNames,
+      }}
+      modifiers={{
+        sunday: isSunday, // Use the function to determine if a date is Sunday
+        marked: isMarkedDay, // Use the function to determine if a date is marked
+      }}
+      modifiersClassNames={{
+        sunday: "text-red-500",
+        marked: "bg-primary text-secondary",
       }}
       components={{
         IconLeft: (

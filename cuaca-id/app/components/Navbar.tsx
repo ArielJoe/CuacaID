@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/public/logo.jpg";
-import { AuthModal } from "./AuthModal";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
@@ -13,7 +12,6 @@ export function Navbar() {
       </Link>
       <div className="flex gap-3">
         <ThemeToggle />
-        <AuthModal />
       </div>
     </div>
   );

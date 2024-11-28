@@ -33,7 +33,7 @@ export default function SettingsRoute() {
         <SettingsForm />
       </div>
       <div className="border border-secondary rounded-lg p-6 w-full sm:w-[40%]">
-        <h2 className="text-xl font-bold mb-3">Units</h2>
+        <h2 className="text-2xl font-bold mb-3">Units</h2>
         <div className="grid gap-3">
           <div className="flex justify-between items-center bg-secondary/50 rounded-md p-3">
             <div>Temperature</div>
