@@ -49,14 +49,12 @@ function Calendar({
   }
 
   if (loading) {
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center">
-          <Loader2 className="size-4 mr-2 animate-spin" />
-          Fetching calendar data...
-        </div>
-      );
-    }
+    return (
+      <div className="flex justify-center items-center">
+        <Loader2 className="size-4 mr-2 animate-spin" />
+        Fetching calendar data...
+      </div>
+    );
   }
 
   // Modifier function to check if a date is in the markedDays array

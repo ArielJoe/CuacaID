@@ -7,6 +7,7 @@ type WeatherItem = {
     temp: number;
   };
   weather: {
+    description: string;
     icon: string;
   }[];
 };
@@ -30,9 +31,7 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
     const weekday = new Intl.DateTimeFormat("en-US", options).format(date);
     return (
       <>
-        {weekday}
-        <br />
-        {day}
+        {weekday} {day}
       </>
     );
   }
@@ -46,7 +45,7 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
             item.dt_txt.split(" ")[1] === "00:00:00" && (
               <div
                 key={index}
-                className="grid gap-2  bg-secondary rounded-md p-3 w-full"
+                className="flex flex-col justify-between bg-secondary rounded-md p-3 w-full"
               >
                 <p className="text-xs sm:text-base">
                   {formatDate(item.dt_txt.split(" ")[0])}
@@ -57,6 +56,9 @@ export default function DailyWeather({ dailyWeatherData }: DailyWeatherProps) {
                   width={50}
                   height={50}
                 />
+                <p className="text-xs sm:text-base">
+                  {item.weather[0].description}
+                </p>
                 <p className="text-xs sm:text-base">
                   {localStorage.getItem("tempUnit") === "C"
                     ? item.main.temp + "°C"

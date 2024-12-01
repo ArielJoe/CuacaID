@@ -61,7 +61,7 @@ export async function SettingsAction(prevState: unknown, formData: FormData) {
     },
   });
 
-  return redirect("/dashboard");
+  return redirect("/dashboard/settings");
 }
 
 export async function getData(id: string) {

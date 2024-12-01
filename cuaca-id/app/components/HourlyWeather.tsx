@@ -7,6 +7,7 @@ type WeatherItem = {
     temp: number;
   };
   weather: {
+    description: string;
     icon: string;
   }[];
 };
@@ -45,6 +46,9 @@ export default function HourlyWeather({
               width={50}
               height={50}
             />
+            <p className="text-xs sm:text-base">
+              {item.weather[0].description}
+            </p>
             <p className="text-xs sm:text-base">
               {localStorage.getItem("tempUnit") === "C"
                 ? item.main.temp + "°C"

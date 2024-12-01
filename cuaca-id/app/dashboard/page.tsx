@@ -30,7 +30,7 @@ type HourlyWeatherData = {
     dt: number;
     dt_txt: string;
     main: { temp: number };
-    weather: { icon: string }[];
+    weather: { description: string; icon: string }[];
   }[];
 };
 
